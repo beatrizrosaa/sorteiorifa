@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteio Rifa Tatto</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 500px;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+
+        #winner-display {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #2c3e50;
+            font-weight: 600;
+            min-height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        #winner-display .winner-name {
+            color: #e74c3c;
+            font-size: 1.8em;
+            font-weight: 700;
+            display: block;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Sorteio da Rifa</h1>
+        <p>Clique no botão abaixo para descobrir o grande vencedor!</p>
+        <button onclick="realizarSorteio()">Sortear Agora!</button>
+        <div id="winner-display"></div>
+    </div>
+
+    <script>
+        // Lista de todos os participantes extraída da sua planilha
+        const participantes = [
+            {"number": 1, "name": "Andreia Rego"},
+            {"number": 2, "name": "Enzo Duarte Guimarães"},
+            {"number": 3, "name": "Joseana Xavier"},
+            {"number": 4, "name": "Renan Matos"},
+            {"number": 5, "name": "Joseana Xavier"},
+            {"number": 6, "name": "Enzo Duarte Guimarães"},
+            {"number": 7, "name": "Julia Curvelo"},
+            {"number": 8, "name": "Mariana Souza"},
+            {"number": 9, "name": "Celina"},
+            {"number": 10, "name": "Natália Oliveira"},
+            {"number": 11, "name": "Iago Garcia"},
+            {"number": 12, "name": "Andreia Rego"},
+            {"number": 13, "name": "Nelson Junior"},
+            {"number": 14, "name": "Ana Carolina"},
+            {"number": 15, "name": "Enzo Duarte Guimarães"},
+            {"number": 16, "name": "Igor Neves"},
+            {"number": 17, "name": "Iago Garcia"},
+            {"number": 18, "name": "Ana Carolina"},
+            {"number": 19, "name": "Julia Curvelo"},
+            {"number": 20, "name": "Yuko Matsui"},
+            {"number": 21, "name": "Jailson"},
+            {"number": 23, "name": "Beatriz"},
+            {"number": 24, "name": "Maria Luiza Azoubel"},
+            {"number": 25, "name": "Beatriz"},
+            {"number": 27, "name": "Yuko Matsui"},
+            {"number": 28, "name": "Mariana Souza"},
+            {"number": 29, "name": "Nathalie Rabello"},
+            {"number": 30, "name": "Yuko Matsui"},
+            {"number": 33, "name": "Caique Leone"},
+            {"number": 36, "name": "Tarsila"},
+            {"number": 38, "name": "Celina"},
+            {"number": 40, "name": "Nathalie Rabello"},
+            {"number": 42, "name": "Henrique Azoubel"},
+            {"number": 43, "name": "Julia Curvelo"},
+            {"number": 45, "name": "Beatriz"},
+            {"number": 46, "name": "Tarsila"},
+            {"number": 47, "name": "Gabriela Muccillo"},
+            {"number": 48, "name": "Igor Neves"},
+            {"number": 50, "name": "Igor Neves"},
+            {"number": 51, "name": "Marcinha"},
+            {"number": 53, "name": "Joseana Xavier"},
+            {"number": 54, "name": "Gabriela Muccillo"},
+            {"number": 60, "name": "Tarsila"},
+            {"number": 65, "name": "Beatriz"},
+            {"number": 66, "name": "Gabriel Magalhães"},
+            {"number": 67, "name": "Renan Matos"},
+            {"number": 68, "name": "Celina"},
+            {"number": 69, "name": "Nathalie Rabello"},
+            {"number": 70, "name": "Jenifer Tavares dos Santos"},
+            {"number": 75, "name": "Amanda Raquel"},
+            {"number": 76, "name": "Igor Neves"},
+            {"number": 78, "name": "Caique Leone"},
+            {"number": 80, "name": "Marcinha"},
+            {"number": 82, "name": "Maria Luiza Azoubel"},
+            {"number": 84, "name": "Henrique Azoubel"},
+            {"number": 85, "name": "Gabriel Magalhães"},
+            {"number": 87, "name": "Jailson"},
+            {"number": 88, "name": "Mariana Souza"},
+            {"number": 89, "name": "Felipe Aguiar"},
+            {"number": 90, "name": "Felipe Aguiar"},
+            {"number": 91, "name": "Nelson"},
+            {"number": 94, "name": "Jenifer Tavares dos Santos"},
+            {"number": 96, "name": "Ana Carolina"},
+            {"number": 97, "name": "Julia Curvelo"},
+            {"number": 98, "name": "Felipe Aguiar"},
+            {"number": 100, "name": "Natália Oliveira"},
+            {"number": 101, "name": "Mirella"},
+            {"number": 102, "name": "Mirella"},
+            {"number": 104, "name": "Renan Matos"},
+            {"number": 105, "name": "Iago Garcia"},
+            {"number": 106, "name": "Natália Oliveira"},
+            {"number": 107, "name": "Amanda Raquel"},
+            {"number": 108, "name": "Amanda Raquel"},
+            {"number": 109, "name": "Felipe Aguiar"},
+            {"number": 113, "name": "Felipe Aguiar"},
+            {"number": 116, "name": "Ana Carolina"},
+            {"number": 117, "name": "Tarsila"},
+            {"number": 120, "name": "Jailson"},
+            {"number": 123, "name": "Gabriel Magalhães"},
+            {"number": 125, "name": "Yuko Matsui"},
+            {"number": 126, "name": "Mirella"},
+            {"number": 127, "name": "Jailson"},
+            {"number": 128, "name": "Caique Leone"},
+            {"number": 134, "name": "Julia Curvelo"},
+            {"number": 135, "name": "Amanda Raquel"},
+            {"number": 136, "name": "Caique Leone"},
+            {"number": 138, "name": "Nathalie Rabello"},
+            {"number": 140, "name": "Jenifer Tavares dos Santos"},
+            {"number": 144, "name": "Mirella"},
+            {"number": 145, "name": "Marcinha"},
+            {"number": 147, "name": "Nelson Junior"},
+            {"number": 148, "name": "Nelson Junior"},
+            {"number": 156, "name": "Marcinha"},
+            {"number": 157, "name": "Nelson"},
+            {"number": 158, "name": "Jenifer Tavares dos Santos"},
+            {"number": 159, "name": "Gabriela Muccillo"},
+            {"number": 160, "name": "Natália Oliveira"},
+            {"number": 161, "name": "Andreia Rego"},
+            {"number": 164, "name": "Andreia Rego"},
+            {"number": 165, "name": "Gabriel Magalhães"},
+            {"number": 166, "name": "Renan Matos"},
+            {"number": 167, "name": "Gabriela Muccillo"},
+            {"number": 168, "name": "Nelson"},
+            {"number": 175, "name": "Nelson"},
+            {"number": 176, "name": "Igor Neves"},
+            {"number": 178, "name": "Maria Luiza Azoubel"},
+            {"number": 179, "name": "Henrique Azoubel"},
+            {"number": 180, "name": "Mariana Souza"}
+        ];
+
+        function realizarSorteio() {
+            const display = document.getElementById('winner-display');
+            
+            if (participantes.length === 0) {
+                display.innerHTML = 'Não há participantes para o sorteio.';
+                return;
+            }
+
+            // Pega o vencedor aleatoriamente
+            const indiceSorteado = Math.floor(Math.random() * participantes.length);
+            const vencedor = participantes[indiceSorteado];
+
+            // Efeito de "suspense"
+            display.innerHTML = 'Sorteando...';
+            
+            setTimeout(() => {
+                display.innerHTML = `
+                    O número sorteado foi o <strong>${vencedor.number}</strong>!
+                    <span class="winner-name">Parabéns, ${vencedor.name}!</span>
+                `;
+            }, 1500); // Aguarda 1.5 segundos para mostrar o resultado
+        }
+    </script>
+
+</body>
+</html>
